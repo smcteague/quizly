@@ -1,24 +1,9 @@
-// import built-in GraphQL data types
-const { 
-    User, 
-    Question, 
-    Quiz, 
-    Submission 
-} = require('../models')
-
-// import our models so that we can interact with the DB
-const { 
-    GraphQLObjectType, 
-    GraphQLID, 
-    GraphQLString, 
-    GraphQLInt, 
-    GraphQLFloat, 
-    GraphQLList, 
-    GraphQLInputObjectType } = require('graphql')
+const { User, Question, Quiz, Submission } = require('../models')
+const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLInt, GraphQLFloat, GraphQLList, GraphQLInputObjectType } = require('graphql')
 
 const UserType = new GraphQLObjectType({
     name: 'User',
-    description: 'User Type',
+    description: 'User type',
     fields: () => ({
         id: { type: GraphQLID },
         username: { type: GraphQLString },
@@ -38,37 +23,6 @@ const UserType = new GraphQLObjectType({
     })
 })
 
-const QuestionType = new GraphQLObjectType({
-    name: 'Question',
-    description: 'Question type',
-    fields: () => ({
-        id: { type: GraphQLID },
-        quizId: { type: GraphQLString },
-        title: { type: GraphQLString },
-        correctAnswer: { type: GraphQLString },
-        order: { type: GraphQLInt}
-    })
-})
-
-const QuestionInputType = new GraphQLInputObjectType({
-    name: 'QuestionInput',
-    description: 'Question input type',
-    fields: () => ({
-        title: { type: GraphQLString },
-        correctAnswer: { type: GraphQLString },
-        order: { type: GraphQLInt }
-    })
-})
-
-const AnswerInputType = new GraphQLInputObjectType({
-    name: 'AnswerInput',
-    description: 'Answer input type',
-    fields: () => ({
-        questionId: { type: GraphQLString },
-        answer: { type: GraphQLString }
-    })
-})
-
 const QuizType = new GraphQLObjectType({
     name: 'Quiz',
     description: 'Quiz type',
@@ -81,7 +35,7 @@ const QuizType = new GraphQLObjectType({
         questions: {
             type: new GraphQLList(QuestionType),
             resolve(parent, args) {
-                return Submission.find({ quizId: parent.id })
+                return Question.find({ quizId: parent.id })
             }
         },
         submissions: {
@@ -110,6 +64,37 @@ const QuizType = new GraphQLObjectType({
                 return score / submissions.length
             }
         }
+    })
+})
+
+const QuestionType = new GraphQLObjectType({
+    name: 'Question',
+    description: 'Question type',
+    fields: () => ({
+        id: { type: GraphQLID },
+        quizId: { type: GraphQLString },
+        title: { type: GraphQLString },
+        correctAnswer: { type: GraphQLString },
+        order: { type: GraphQLInt }
+    })
+})
+
+const QuestionInputType = new GraphQLInputObjectType({
+    name: 'QuestionInput',
+    description: 'Question input type',
+    fields: () => ({
+        title: { type: GraphQLString },
+        correctAnswer: { type: GraphQLString },
+        order: { type: GraphQLInt }
+    })
+})
+
+const AnswerInputType = new GraphQLInputObjectType({
+    name: 'AnswerInput',
+    description: 'Answer input type',
+    fields: () => ({
+        questionId: { type: GraphQLString },
+        answer: { type: GraphQLString }
     })
 })
 
@@ -144,4 +129,3 @@ module.exports = {
     QuestionInputType,
     AnswerInputType
 }
-

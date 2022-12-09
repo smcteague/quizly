@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-		<% if (user.quizzes) { %>
+		<% if (user.quizzes){ %>
             <% for (const quiz of user.quizzes) { %>
                 <tr>
                     <td>
@@ -38,4 +38,3 @@
     </table>
 </main>
 <%- include('../partials/footer.ejs') %>
-

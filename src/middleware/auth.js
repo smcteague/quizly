@@ -17,8 +17,10 @@ const authenticate = (req, res, next) => {
         console.log("User verification successful!")
         next()
     }
-    catch(err) {
-        // handle case where user is not authenticated
+    catch (err) {
+        console.log(err)
+        // Handle the case where the user is not authenticated
+        
         console.log("User verification failed!")
 
         if (unprotectedRoutes.includes(req.path)) {
@@ -30,4 +32,3 @@ const authenticate = (req, res, next) => {
 }
 
 module.exports = { authenticate }
-

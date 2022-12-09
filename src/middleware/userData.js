@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-const userData = async(req, res, next) => {
+const userData = async (req, res, next) => {
     if (!req.verifiedUser) {
         next()
         return
@@ -9,34 +9,34 @@ const userData = async(req, res, next) => {
     const query = `
     query user($id: ID!){
         user(id: $id) {
-          id,
-          username,
-          email,
-          quizzes {
-            id,
-            slug,
-            title,
-            description,
-            avgScore,
-            questions {
+            id, 
+            username,
+            email,
+            quizzes {
                 id,
-              title,
-              correctAnswer
+                slug,
+                title,
+                description,
+                avgScore,
+                questions {
+                    id,
+                    title,
+                    correctAnswer
+                },
+                submissions {
+                    userId,
+                    score
+                }
             },
             submissions {
-              userId,
+                quiz {
+                    title,
+                    description
+                },
                 score
             }
-          },
-          submissions {
-            quiz {
-              title,
-              description
-            },
-            score
-          }
         }
-    }
+    }    
     `
 
     try {
@@ -48,20 +48,21 @@ const userData = async(req, res, next) => {
             }
         },
         {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-
-    req.verifiedUser.user.quizzes = response.data.data.quizzes
-    req.verifiedUser.user.submissions = response.data.data.user.submissions
-
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        req.verifiedUser.user.quizzes = response.data.data.user.quizzes
+        req.verifiedUser.user.submissions = response.data.data.user.submissions 
+        
     }
     catch(err) {
         console.log(err)
+
     }
     next()
+
 }
 
 module.exports = { userData }
-

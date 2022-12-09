@@ -17,4 +17,3 @@ MainQuizRouter.route('/results/:id')
     .get(require('./results.js'))
 
 module.exports = MainQuizRouter
-

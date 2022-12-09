@@ -19,7 +19,6 @@ const userSchema = new mongoose.Schema({
             "Please enter a valid email"
         ]
     }
-}, {timestamps: true})
+}, { timestamps: true })
 
 module.exports = mongoose.model("user", userSchema)
-

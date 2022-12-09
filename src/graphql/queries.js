@@ -1,21 +1,6 @@
-const { 
-    UserType, 
-    QuizType,
-    SubmissionType
-} = require('./types')
-
-const {
-    User,
-    Quiz,
-    Submission
-} = require('../models')
-
-const {
-    GraphQLString,
-    GraphQLID,
-    GraphQLList
-} = require('graphql')
-
+const { UserType, QuizType, SubmissionType } = require('./types')
+const { User, Quiz, Submission } = require('../models')
+const { GraphQLString, GraphQLID, GraphQLList } = require('graphql')
 
 const users = {
     type: new GraphQLList(UserType),
@@ -25,7 +10,9 @@ const users = {
     }
 }
 
-// Get user by id
+/* 
+* Get user by id
+*/
 const user = {
     type: UserType,
     description: 'Query a user by their ID',
@@ -37,7 +24,9 @@ const user = {
     }
 }
 
-// get a quiz base on a slug
+/* 
+* Get a quiz based on a slug
+*/
 const quizBySlug = {
     type: QuizType,
     description: 'Query a quiz by its slug',
@@ -51,9 +40,12 @@ const quizBySlug = {
     }
 }
 
+/* 
+* Submission by id
+*/
 const submissionById = {
     type: SubmissionType,
-    description: 'Query a submission by its ID',
+    description: 'Query a submission by their ID',
     args: {
         id: { type: GraphQLID }
     },
@@ -68,4 +60,3 @@ module.exports = {
     quizBySlug,
     submissionById
 }
-

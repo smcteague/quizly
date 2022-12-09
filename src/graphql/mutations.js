@@ -1,26 +1,11 @@
-const {
-    GraphQLString,
-    GraphQLList,
-    GraphQLNonNull,
-    GraphQLObjectType,
-    GraphQLInt
-} = require('graphql')
-
-const {
-    QuestionInputType,
-    AnswerInputType
-} = require('./types')
-
-const {
-    User,
-    Quiz,
-    Question,
-    Submission
-} = require('../models')
-
+const { GraphQLString, GraphQLNonNull, GraphQLList } = require('graphql')
+const { QuestionInputType, AnswerInputType } = require('./types')
+const { User, Quiz, Question, Submission } = require("../models")
 const { createJWT } = require('../util/auth')
 
-
+/* 
+* Register a user
+*/
 const register = {
     type: GraphQLString,
     args: {
@@ -29,22 +14,22 @@ const register = {
         password: { type: GraphQLString }
     },
     async resolve(parent, args) {
-        const checkUser = await User.findOne({
-            email: args.email
-        })
+        // Check if a user with passed email exists
+        const checkUser = await User.findOne({ email: args.email })
+
         if (checkUser) {
-            throw new Error("User with this email address already exists!")
+            throw new Error("User with this email address already exists")
         }
 
-        const { username, email, password } = args
         const newUser = new User({
-            username, email, password
+            username: args.username,
+            password: args.password,
+            email: args.email
         })
 
         await newUser.save()
 
         const token = createJWT(newUser)
-        console.log(token)
         return token
     }
 }
@@ -56,16 +41,14 @@ const login = {
         password: { type: GraphQLString }
     },
     async resolve(parent, args) {
-        const user = await User.findOne({
-            email: args.email
-        })
-        if (!user || args.password !== user.password) {
-            throw new Error("Password incorrect or user with this email does not exist.")
+        const user = await User.findOne({ email: args.email })
+
+        if (!user || user.password !== args.password) {
+            throw new Error("Password incorrect or user with this email does not exist")
         }
 
         const token = createJWT(user)
-        console.log(token)
-        return token    
+        return token
     }
 }
 
@@ -163,4 +146,3 @@ module.exports = {
     createQuiz,
     submitQuiz
 }
-

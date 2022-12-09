@@ -8,20 +8,19 @@ module.exports = async (req, res) => {
 
     for (const answer in req.body) {
         if (answer !== 'title' && answer !== 'quizId') {
-            answer.push({
+            answers.push({
                 questionId: answer,
                 answer: String(req.body[answer])
             })
         }
     }
-
     const mutation = `
-        mutation submitQuiz($userId: String!, $quizId: String!, $answers: [AnswerInput!]!) {
+        mutation submitQuiz($userId: String!, $quizId: String!, $answers: [AnswerInput!]! ){
             submitQuiz(userId: $userId, quizId: $quizId, answers: $answers)
         }`
 
     try {
-        const { data } = await axios.post(process.env.GRAPHQL_ENDPOINT,
+        const { data } = await axios.post('http://localhost:3000/graphql',
             {
                 query: mutation,
                 variables: {
@@ -35,18 +34,21 @@ module.exports = async (req, res) => {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log(data)
-            console.log({
-                quizId: req.body.quizId,
-                userId: req.verifiedUser.user._id,
-                answers
-            })
-            submissionId = data.data.submitQuiz
-            res.redirect(`/quiz/results/${submissionId}`)
+        console.log(data)
+        console.log({
+            quizId: req.body.quizId,
+            userId: req.verifiedUser.user._id,
+            answers
+        })
+        submissionId = data.data.submitQuiz
+        res.redirect(`/quiz/results/${submissionId}`)
+
+
     }
-    catch(error) {
-        console.log(error)
+    catch(err){
+        console.log(err)
         res.redirect('/')
     }
-}
+    
 
+}

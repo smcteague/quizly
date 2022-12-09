@@ -6,4 +6,6 @@ const createJWT = (user) => {
     })
 }
 
-module.exports = { createJWT }
+module.exports = {
+    createJWT
+}
